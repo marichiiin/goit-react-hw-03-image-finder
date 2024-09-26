@@ -3,12 +3,12 @@ import SearchBar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
-import { getAPI } from 'pixabay-api';
+import { getAPI } from '../pixabay-api';
 import styles from './App.module.css';
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster} from 'react-hot-toast';
 //import { toHaveStyle } from '@testing-library/jest-dom/dist/matchers';
 
-class App extends Component {
+export class App extends Component {
   state = {
     images: [],
     currentPage: 1,
@@ -18,17 +18,26 @@ class App extends Component {
     isEnd: false,
   };
 
-  fetchImages = async () => {
+  async componentDidUpdate(_prevProps, prevState) {
     const { searchQuery, currentPage } = this.state;
 
-    this.setState({ isLoading: true, isError: false });
+    // Fetch new images if the search query or current page changes
+    if (prevState.searchQuery !== searchQuery || prevState.currentPage !== currentPage) {
+      await this.fetchImages(searchQuery, currentPage);
+    }
+  }
+
+  fetchImages = async (searchQuery, currentPage) => {
+    //const { searchQuery, currentPage } = this.state;
+
+    //this.setState({ isLoading: true, isError: false });
 
     try {
-      const response = await getAPI(searchQuery, currentPage);
+      const fetchedImages= await getAPI(searchQuery, currentPage);
 
-      console.log(response);
+      console.log(fetchedImages);
 
-      const { totalHits, hits } = response;
+      const { totalHits, hits } = fetchedImages;
 
       // Check if the API returns no images for the seearch query
       if (hits.length === 0) {
@@ -62,16 +71,19 @@ class App extends Component {
         isEnd: prevState.images.length + hits.length >= totalHits,
       }));
     } catch (error) {
-
+      // Handle any errors that occur during the API request
+      this.setState({ isError: true });
+      toast.error('Oops, something went wrong! Reload this page!');
     } finally {
-
+      // Ensure loading state is reset once the API request completes
+      this.setState({ isLoading: false });
     }
   };
 
   render() {
     const { images, isLoading, isError, isEnd } = this.state;
     return (
-      <div className={styles.App}>
+      <div className={styles.Appstyle}>
         <SearchBar onSubmit={this.hadleSearchSubmit} />
         <ImageGallery images={images} />
         {isLoading && <Loader />}
@@ -79,10 +91,10 @@ class App extends Component {
           <Button onClick={this.handleLoadMore} />
         )}
         {isError && <p>Something went wrong. Please try again later.</p>}
-        <Toaster position="top-right" reverseOrder={false} />
+        <Toaster position="top-center" reverseOrder={false} />
       </div>
     );
   }
 }
 
-export default App;
+
