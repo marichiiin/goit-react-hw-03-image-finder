@@ -1,10 +1,10 @@
+import React, { Component } from 'react';
+//import css from './ImageGalleryItem.module.css';
 
 
 
 
-
-
-class ImageGalleryItem extends Component {
+export class ImageGalleryItem extends Component {
     static propTypes = {
         image: PropTypes.shape({
             webformatURL: PropTypes.string.isRequired,
@@ -24,6 +24,10 @@ class ImageGalleryItem extends Component {
     };
 
     render() {
-        
+        return (
+            <div>
+                <h1>Image Gallery Item</h1>
+            </div>
+        )
     }
 }

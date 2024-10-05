@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import SearchBar from './Searchbar/Searchbar';
-import ImageGallery from './ImageGallery/ImageGallery';
-import Button from './Button/Button';
-import Loader from './Loader/Loader';
+import { Component } from 'react';
+import { SearchBar } from './Searchbar/Searchbar';
+import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Button } from './Button/Button';
+import { Loader } from './Loader/Loader';
 import { getAPI } from '../pixabay-api';
 import styles from './App.module.css';
-import toast, { Toaster} from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 //import { toHaveStyle } from '@testing-library/jest-dom/dist/matchers';
 
 export class App extends Component {
@@ -20,22 +20,24 @@ export class App extends Component {
 
   async componentDidUpdate(_prevProps, prevState) {
     const { searchQuery, currentPage } = this.state;
-
+    console.log("this.this.this");
     // Fetch new images if the search query or current page changes
     if (prevState.searchQuery !== searchQuery || prevState.currentPage !== currentPage) {
       await this.fetchImages(searchQuery, currentPage);
+      console.log("thas.thas.thas");
     }
-  }
+  };
 
   fetchImages = async (searchQuery, currentPage) => {
     //const { searchQuery, currentPage } = this.state;
 
-    //this.setState({ isLoading: true, isError: false });
+    this.setState({ isLoading: true, isError: false });
 
     try {
       const fetchedImages= await getAPI(searchQuery, currentPage);
 
       console.log(fetchedImages);
+      
 
       const { totalHits, hits } = fetchedImages;
 
@@ -80,11 +82,23 @@ export class App extends Component {
     }
   };
 
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const { search } = this.state;
+    const newSearch = e.target.search.value.trim().toLowerCase();
+
+    // if new search string is different from the current search string saved in state
+    if (newSearch !== search) {
+      this.setState({ search: newSearch, page: 1, images: [] });
+    }
+  };
+
   render() {
     const { images, isLoading, isError, isEnd } = this.state;
     return (
       <div className={styles.Appstyle}>
-        <SearchBar onSubmit={this.hadleSearchSubmit} />
+        <SearchBar onSubmit={this.handleSubmit} />
         <ImageGallery images={images} />
         {isLoading && <Loader />}
         {isLoading && !isError && images.length > 0 && isEnd && (
