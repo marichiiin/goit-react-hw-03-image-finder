@@ -27,7 +27,7 @@ export class Modal extends Component {
     render() {
         const { image, tags } = this.props;
         return (
-            <div className={styles.overlay} onClick={this.handleBackdrop}>
+            <div className={styles.overlay}>
                 <div className={styles.modal}>
                     <img src={image} alt={tags} />
                 </div>

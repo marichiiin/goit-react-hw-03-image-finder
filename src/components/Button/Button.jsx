@@ -1,9 +1,11 @@
-//import css from './Button.module.css';
+import css from './Button.module.css';
 
-export const Button = () => {
+export const Button = ({ onClick }) => {
     return(
-        <div>
-            <h1>Button</h1>
+        <div className={css.ButtonWrap}>
+            <button className={css.Button} onClick={onClick}>
+                Load More
+            </button>
         </div>
     )
 }

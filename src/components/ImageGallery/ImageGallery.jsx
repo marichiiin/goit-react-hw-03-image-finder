@@ -1,9 +1,24 @@
-//import css from './ImageGallery.module.css';
+import { ImageGalleryItem  } from "components/ImageGalleryItem/ImageGalleryItem"
+import PropTypes from 'prop-types';
+import css from './ImageGallery.module.css';
 
-export const ImageGallery = () => {
+export const ImageGallery = ({ images }) => {
     return(
-        <div>
-            <h1>ImageGallery</h1>
-        </div>
-    )
-}
+        <ul className={`${css.ImageGallery} js-gallery`}>
+            {images.map(image => (
+                <ImageGalleryItem
+                    key={image.id}
+                    image={image}
+                />
+            ))}
+        </ul>
+    );
+};
+
+ImageGallery.propTypes = {
+    images: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number.isRequired,
+        })
+    ).isRequired
+};

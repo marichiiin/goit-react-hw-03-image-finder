@@ -20,24 +20,24 @@ export class App extends Component {
 
   async componentDidUpdate(_prevProps, prevState) {
     const { searchQuery, currentPage } = this.state;
-    console.log("this.this.this");
+    //console.log(searchQuery);
     // Fetch new images if the search query or current page changes
     if (prevState.searchQuery !== searchQuery || prevState.currentPage !== currentPage) {
+      console.log("before awaiting response from fetchImages");
       await this.fetchImages(searchQuery, currentPage);
-      console.log("thas.thas.thas");
     }
   };
 
   fetchImages = async (searchQuery, currentPage) => {
     //const { searchQuery, currentPage } = this.state;
 
-    this.setState({ isLoading: true, isError: false });
+    //this.setState({ isLoading: true, isError: false });
 
     try {
+      this.setState({isLoading: true});
       const fetchedImages= await getAPI(searchQuery, currentPage);
 
       console.log(fetchedImages);
-      
 
       const { totalHits, hits } = fetchedImages;
 
@@ -85,13 +85,18 @@ export class App extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const { search } = this.state;
+    const { searchQuery } = this.state;
     const newSearch = e.target.search.value.trim().toLowerCase();
 
     // if new search string is different from the current search string saved in state
-    if (newSearch !== search) {
-      this.setState({ search: newSearch, page: 1, images: [] });
+    if (newSearch !== searchQuery) {
+      this.setState({ searchQuery: newSearch, currentPage: 1, images: [] });
     }
+  };
+
+  handleLoadMore = () => {
+    this.setState(prevState => ({ currentPage: prevState.currentPage + 1}));
+    console.log("click")
   };
 
   render() {
@@ -101,9 +106,7 @@ export class App extends Component {
         <SearchBar onSubmit={this.handleSubmit} />
         <ImageGallery images={images} />
         {isLoading && <Loader />}
-        {isLoading && !isError && images.length > 0 && isEnd && (
-          <Button onClick={this.handleLoadMore} />
-        )}
+        {!isError && images.length > 0 && !isEnd && <Button onClick={this.handleLoadMore} />}
         {isError && <p>Something went wrong. Please try again later.</p>}
         <Toaster position="top-center" reverseOrder={false} />
       </div>

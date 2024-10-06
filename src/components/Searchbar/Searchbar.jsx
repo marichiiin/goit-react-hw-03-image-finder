@@ -9,14 +9,14 @@ export const SearchBar = ({ onSubmit }) => {
                     <FaSearch />
                     <span className={css.SearchFormButtonLabel}>Search</span>
                 </button>
-                <input 
+                <input
                     className={css.SearchForminput}
                     type="text"
                     autoComplete="off"
                     autoFocus
                     placeholder="Search images and photos"
                     name="search"
-                />   
+                />
             </form>
         </header>
     )

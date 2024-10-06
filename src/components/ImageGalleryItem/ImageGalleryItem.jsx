@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-//import css from './ImageGalleryItem.module.css';
-
-
+import PropTypes from 'prop-types';
+import { Modal } from 'components/Modal/Modal';
+import css from './ImageGalleryItem.module.css';
 
 
 export class ImageGalleryItem extends Component {
@@ -17,6 +17,22 @@ export class ImageGalleryItem extends Component {
         showModal: false,
     };
 
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.showModal !== this.state.showModal) {
+            const gallery = document.querySelector('.js-gallery');
+            if (!gallery) return;
+
+            if (this.state.showModal) {
+                console.log('Modal is now shown');
+                gallery.style.pointerEvents = 'none';
+            } else {
+                console.log('Modal is now hidden');
+                gallery.style.pointerEvents = 'auto';
+            }
+        }
+    }
+
     toggleModal = () => {
         this.setState(prevState => ({
             showModal: !prevState.showModal,
@@ -24,10 +40,18 @@ export class ImageGalleryItem extends Component {
     };
 
     render() {
+        const { webformatURL, largeImageURL, tags } = this.props.image;
+        const { showModal } = this.state;
+
         return (
-            <div>
-                <h1>Image Gallery Item</h1>
-            </div>
+            <li className={css.ImageGalleryItem} onClick={this.toggleModal}>
+                <img
+                    className={css.ImageGalleryItemImage}
+                    src={webformatURL}
+                    alt={tags}
+                />
+                {showModal && (<Modal image={largeImageURL} tags={tags} onClose={this.toggleModal}/>)}
+            </li>
         )
     }
 }
