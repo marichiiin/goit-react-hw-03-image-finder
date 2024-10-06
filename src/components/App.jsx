@@ -6,7 +6,6 @@ import { Loader } from './Loader/Loader';
 import { getAPI } from '../pixabay-api';
 import styles from './App.module.css';
 import toast, { Toaster } from 'react-hot-toast';
-//import { toHaveStyle } from '@testing-library/jest-dom/dist/matchers';
 
 export class App extends Component {
   state = {
@@ -20,7 +19,7 @@ export class App extends Component {
 
   async componentDidUpdate(_prevProps, prevState) {
     const { searchQuery, currentPage } = this.state;
-    //console.log(searchQuery);
+
     // Fetch new images if the search query or current page changes
     if (prevState.searchQuery !== searchQuery || prevState.currentPage !== currentPage) {
       console.log("before awaiting response from fetchImages");
@@ -29,10 +28,6 @@ export class App extends Component {
   };
 
   fetchImages = async (searchQuery, currentPage) => {
-    //const { searchQuery, currentPage } = this.state;
-
-    //this.setState({ isLoading: true, isError: false });
-
     try {
       this.setState({isLoading: true});
       const fetchedImages= await getAPI(searchQuery, currentPage);
